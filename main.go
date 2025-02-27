@@ -131,21 +131,8 @@ func getPoints(response http.ResponseWriter, request *http.Request) {
 		response.Write([]byte("No receipt found for that ID."))
 	}
 
-	rBody, err := io.ReadAll(request.Body)
-	if err != nil {
-		sendInvalidResponse()
-		return
-	}
-
-	newReceipt := receiptStruct{}
-
-	json.Unmarshal(rBody, &newReceipt)
-	if !newReceipt.validateReceipt() {
-		sendInvalidResponse()
-		return
-	}
-
-	receiptUUID := uuid.NewSHA1(uuid.Max, rBody)
+	id := mux.Vars(request)["id"]
+	receiptUUID, _ := uuid.Parse(id)
 	returnPoints, found := receiptPoints[receiptUUID]
 	if !found {
 		sendInvalidResponse()
