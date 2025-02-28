@@ -78,7 +78,31 @@ func (rS *receiptStruct) calculatePoints() int {
 }
 
 func (rS *receiptStruct) validateReceipt() bool {
-	return true
+	if !regexp.MustCompile(`^[\w\s\-&]+$`).MatchString(rS.Retailer) {
+		return false
+	}
+
+	if !regexp.MustCompile(`^\d{4}-\d{2}-\d{2}$`).MatchString(rS.PurchaseDate) {
+		return false
+	}
+
+	if !regexp.MustCompile(`^([01]?[0-9]|2[0-3]):([0-5]?[0-9])$`).MatchString(rS.PurchaseTime) {
+		return false
+	}
+
+	costRE := regexp.MustCompile(`^\d+\.\d{2}$`)
+
+	for _, item := range rS.Items {
+		if !regexp.MustCompile(`[\w\s\-]+$`).MatchString(item.ShortDescription) {
+			return false
+		}
+
+		if !costRE.MatchString(item.Price) {
+			return false
+		}
+	}
+
+	return costRE.MatchString(rS.Total)
 }
 
 func process(response http.ResponseWriter, request *http.Request) {
