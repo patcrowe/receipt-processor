@@ -169,6 +169,7 @@ func getPoints(response http.ResponseWriter, request *http.Request) {
 	returnPoints, found := receiptPoints[receiptUUID]
 	if !found {
 		sendInvalidResponse()
+		return
 	}
 
 	responseStruct := struct {
