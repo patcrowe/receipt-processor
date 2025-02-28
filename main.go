@@ -91,6 +91,7 @@ func (rS *receiptStruct) validateReceipt() bool {
 	}
 
 	costRE := regexp.MustCompile(`^\d+\.\d{2}$`)
+	totalFromItems := 0.0
 
 	for _, item := range rS.Items {
 		if !regexp.MustCompile(`[\w\s\-]+$`).MatchString(item.ShortDescription) {
@@ -100,6 +101,14 @@ func (rS *receiptStruct) validateReceipt() bool {
 		if !costRE.MatchString(item.Price) {
 			return false
 		}
+
+		priceFloat, _ := strconv.ParseFloat(item.Price, 64)
+		totalFromItems += priceFloat
+	}
+
+	totalFloat, _ := strconv.ParseFloat(rS.Total, 64)
+	if math.Floor(totalFloat*100)/100 != math.Floor(totalFromItems*100)/100 {
+		return false
 	}
 
 	return costRE.MatchString(rS.Total)

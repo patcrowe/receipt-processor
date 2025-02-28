@@ -1,0 +1,10 @@
+{
+    "retailer": "Steam",
+    "purchaseDate": "2019-05-28",
+    "purchaseTime": "17:05",
+    "total": "24.98",
+    "items": [
+        {"shortDescription": "Outer Wilds - PC", "price": "14.99"},
+        {"shortDescription": "Portal 2 - PC", "price": "9.99"}
+    ]
+}
